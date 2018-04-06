@@ -76,6 +76,9 @@ $( function() {
 
 	function createStandardConfig() {
 		return {
+			dimensions: {
+				margin: 5,
+			},
 			content: [
 				{
 					type: 'row',
@@ -171,7 +174,8 @@ $( function() {
 				responsiveMode: 'always'
 			},
 			dimensions: {
-				minItemWidth: 250
+				minItemWidth: 250,
+				margin: 20
 			},
 			content: [
 				{
@@ -291,6 +295,9 @@ $( function() {
 				reorderOnTabMenuClick: false,
 				tabControlOffset: 5
 			},
+			dimensions: {
+				margin: 10,
+			},
 			content: [
 				{
 					type: 'row',
@@ -349,62 +356,71 @@ $( function() {
 						},
 						{
 							width: 20,
-							type: 'stack',
+							type: 'column',
 							content: [
 								{
-									type: 'component',
-									title: 'Market',
-									componentName: 'html'
-								},
-								{
-									type: 'component',
-									title: 'Performance',
-									componentName: 'html'
-								},
-								{
-									type: 'component',
-									title: 'Trend',
-									componentName: 'html'
-								},
-								{
-									type: 'component',
-									title: 'Balance',
-									componentName: 'html'
-								},
-								{
-									type: 'component',
-									title: 'Budget',
-									componentName: 'html'
-								},
-								{
-									type: 'component',
-									title: 'Curve',
-									componentName: 'html'
-								},
-								{
-									type: 'component',
-									title: 'Standing',
-									componentName: 'html'
-								},
-								{
-									type: 'component',
-									title: 'Lasting',
-									componentName: 'html',
-									componentState: { bg: 'golden_layout_spiral.png' }
-								},
-								{
-									type: 'component',
-									title: 'Profile',
-									componentName: 'html'
+									type: 'stack',
+									content: [
+										{
+											type: 'component',
+											title: 'Market',
+											componentName: 'html'
+										},
+										{
+											type: 'component',
+											title: 'Performance',
+											componentName: 'html'
+										},
+										{
+											type: 'component',
+											title: 'Trend',
+											componentName: 'html'
+										},
+										{
+											type: 'component',
+											title: 'Balance',
+											componentName: 'html'
+										},
+										{
+											type: 'component',
+											title: 'Budget',
+											componentName: 'html'
+										},
+										{
+											type: 'component',
+											title: 'Curve',
+											componentName: 'html'
+										},
+										{
+											type: 'component',
+											title: 'Standing',
+											componentName: 'html'
+										},
+										{
+											type: 'component',
+											title: 'Lasting',
+											componentName: 'html',
+											componentState: { bg: 'golden_layout_spiral.png' }
+										},
+										{
+											type: 'component',
+											title: 'Profile',
+											componentName: 'html'
+										}
+									]
 								}
 							]
 						},
 						{
-							width: 30,
-							title: 'Layout',
-							type: 'component',
-							componentName: 'html',
-							componentState: { bg: 'golden_layout_text.png' }
+							type: 'column',
+							content: [{
+								width: 30,
+								title: 'Layout',
+								type: 'component',
+								componentName: 'html',
+								componentState: { bg: 'golden_layout_text.png' }
+							}
+							]
 						}
 					]
 				}

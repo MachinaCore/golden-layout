@@ -55,7 +55,13 @@ lm.LayoutManager = function( config, container ) {
 		'row': lm.utils.fnBind( lm.items.RowOrColumn, this, [ false ] ),
 		'stack': lm.items.Stack,
 		'component': lm.items.Component
-	};
+  	};
+  
+	if(this.config.dimensions.margin) {
+		var div = $("<div />", {
+			html: '&shy;<style>' + ".lm_stack { margin: " + this.config.dimensions.margin + "px; }" + '</style>'
+		}).appendTo("body");    
+	}
 };
 
 /**

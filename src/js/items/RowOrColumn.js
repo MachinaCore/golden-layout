@@ -278,17 +278,30 @@ lm.utils.copy( lm.items.RowOrColumn.prototype, {
 		var i,
 			sizeData = this._calculateAbsoluteSizes();
 
-		for( i = 0; i < this.contentItems.length; i++ ) {
-			if( sizeData.additionalPixel - i > 0 ) {
-				sizeData.itemSizes[ i ]++;
-			}
+		var margin = this.layoutManager.config.dimensions.margin * 2;
 
-			if( this._isColumn ) {
-				this.contentItems[ i ].element.width( sizeData.totalWidth );
-				this.contentItems[ i ].element.height( sizeData.itemSizes[ i ] );
+		for (i = 0; i < this.contentItems.length; i++) {
+			var item = this.contentItems[i];
+
+			if (sizeData.additionalPixel - i > 0) {
+				sizeData.itemSizes[i]++;
+			}
+			if (this._isColumn) {
+				if (item.isStack) {
+					this.contentItems[i].element.width(sizeData.totalWidth - margin);
+					this.contentItems[i].element.height(sizeData.itemSizes[i] - margin);
+				} else {
+					this.contentItems[i].element.width(sizeData.totalWidth);
+					this.contentItems[i].element.height(sizeData.itemSizes[i]);
+				}
 			} else {
-				this.contentItems[ i ].element.width( sizeData.itemSizes[ i ] );
-				this.contentItems[ i ].element.height( sizeData.totalHeight );
+				if (item.isStack) {
+					this.contentItems[i].element.width(sizeData.itemSizes[i] - margin);
+					this.contentItems[i].element.height(sizeData.totalHeight - margin);
+				} else {
+					this.contentItems[i].element.width(sizeData.itemSizes[i]);
+					this.contentItems[i].element.height(sizeData.totalHeight);
+				}
 			}
 		}
 	},

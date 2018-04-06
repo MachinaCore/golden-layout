@@ -23,7 +23,8 @@ lm.config.defaultConfig = {
 		minItemWidth: 10,
 		headerHeight: 20,
 		dragProxyWidth: 300,
-		dragProxyHeight: 200
+		dragProxyHeight: 200,
+		margin: 0
 	},
 	labels: {
 		close: 'close',
