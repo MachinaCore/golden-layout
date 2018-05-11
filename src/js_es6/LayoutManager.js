@@ -92,6 +92,12 @@ export default class LayoutManager extends EventEmitter {
             'stack': Stack,
             'component': Component
         };
+
+        if(this.config.dimensions.margin) {
+          var div = $("<div />", {
+            html: '&shy;<style>' + ".lm_stack { margin: " + this.config.dimensions.margin + "px; }" + '</style>'
+          }).appendTo("body");    
+        }
     }
 
     /**
