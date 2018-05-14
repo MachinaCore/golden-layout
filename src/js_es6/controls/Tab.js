@@ -15,16 +15,22 @@ import {
  * @constructor
  */
 
-const _template = '<li class="lm_tab"><i class="lm_left"></i>' +
-        '<span class="lm_title"></span><div class="lm_close_tab"></div>' +
-        '<i class="lm_right"></i></li>'
-
 export default class Tab {
 
-    constructor(header, contentItem) {
+    constructor(header, contentItem, layoutManager) {
+      let template = '<li class="lm_tab"><i class="lm_left"></i>' +
+      '<span class="lm_title"></span><div class="lm_close_tab"></div>' +
+      '<i class="lm_right"></i></li>';
+
+        this.layoutManager = layoutManager;
         this.header = header;
         this.contentItem = contentItem;
-        this.element = $(_template);
+
+        if(this.layoutManager.config.templates.tab) {
+          template = this.layoutManager.config.templates.tab;
+        }
+
+        this.element = $(template);
         this.titleElement = this.element.find('.lm_title');
         this.closeElement = this.element.find('.lm_close_tab');
         this.closeElement[contentItem.config.isClosable ? 'show' : 'hide']();

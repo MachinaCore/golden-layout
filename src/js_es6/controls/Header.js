@@ -29,6 +29,10 @@ export default class Header extends EventEmitter {
         this.layoutManager = layoutManager;
         this.element = $(_template);
 
+        if(this.layoutManager.config.templates.header) {
+          this.element = $(this.layoutManager.config.templates.header);
+        }
+
         if (this.layoutManager.config.settings.selectionEnabled === true) {
             this.element.addClass('lm_selectable');
             this.element.on('click touchstart', fnBind(this._onHeaderClick, this));
@@ -51,6 +55,10 @@ export default class Header extends EventEmitter {
         this._lastVisibleTabIndex = -1;
         this._tabControlOffset = this.layoutManager.config.settings.tabControlOffset;
         this._createControls();
+
+        this.id = this.parent.config.id;
+
+        this.layoutManager.emit('headerCreated', this);
     }
 
     /**
@@ -72,7 +80,7 @@ export default class Header extends EventEmitter {
             }
         }
 
-        tab = new Tab(this, contentItem);
+        tab = new Tab(this, contentItem, this.layoutManager);
 
         if (this.tabs.length === 0) {
             this.tabs.push(tab);

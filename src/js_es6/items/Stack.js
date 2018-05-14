@@ -16,6 +16,10 @@ export default class Stack extends AbstractContentItem {
         super(layoutManager, config, parent)
 
         this.element = $('<div class="lm_item lm_stack"></div>');
+        if(this.layoutManager.config.templates.stack) {
+          console.log("stack config template");
+          this.element = $(this.layoutManager.config.templates.stack);
+        }
         this._activeContentItem = null;
         var cfg = layoutManager.config;
         this._header = { // defaults' reconstruction from old configuration style

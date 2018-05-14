@@ -32,6 +32,10 @@ const defaultConfig = {
         popout: 'open in new window',
         popin: 'pop in',
         tabDropdown: 'additional tabs'
+    },
+    templates: {
+      // stack: '<div class="lm_item lm_stack"></div>',
+      header: '',
     }
 }
 
