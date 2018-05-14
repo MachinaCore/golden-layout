@@ -40,7 +40,6 @@ export default class Header extends EventEmitter {
 
         this.tabsContainer = this.element.find('.lm_tabs');
         this.tabDropdownContainer = this.element.find('.lm_tabdropdown_list');
-        this.tabDropdownContainer.hide();
         this.controlsContainer = this.element.find('.lm_controls');
         this.parent = parent;
         this.parent.on('resize', this._updateTabSizes, this);
@@ -49,8 +48,11 @@ export default class Header extends EventEmitter {
         this.closeButton = null;
         this.dockButton = null;
         this.tabDropdownButton = null;
-        this.hideAdditionalTabsDropdown = fnBind(this._hideAdditionalTabsDropdown, this);
-        $(document).mouseup(this.hideAdditionalTabsDropdown);
+        if(!this.layoutManager.config.settings.header.alwaysShowtabDropdownContainer) {
+          this.tabDropdownContainer.hide();
+          this.hideAdditionalTabsDropdown = fnBind(this._hideAdditionalTabsDropdown, this);
+          $(document).mouseup(this.hideAdditionalTabsDropdown);
+        }
 
         this._lastVisibleTabIndex = -1;
         this._tabControlOffset = this.layoutManager.config.settings.tabControlOffset;
@@ -259,13 +261,14 @@ export default class Header extends EventEmitter {
          */
         showTabDropdown = fnBind(this._showAdditionalTabsDropdown, this);
         tabDropdownLabel = this.layoutManager.config.labels.tabDropdown;
-        this.tabDropdownButton = new HeaderButton(this, tabDropdownLabel, 'lm_tabdropdown', showTabDropdown);
+
+        this.tabDropdownButton = new HeaderButton(this, tabDropdownLabel, 'lm_tabdropdown', showTabDropdown, this.layoutManager);
         this.tabDropdownButton.element.hide();
 
         if (this.parent._header && this.parent._header.dock) {
             var button = fnBind(this.parent.dock, this.parent);
             label = this._getHeaderSetting('dock');
-            this.dockButton = new HeaderButton(this, label, 'lm_dock', button);
+            this.dockButton = new HeaderButton(this, label, 'lm_dock', button, this.layoutManager);
         }
 
         /**
@@ -274,7 +277,7 @@ export default class Header extends EventEmitter {
         if (this._getHeaderSetting('popout')) {
             popout = fnBind(this._onPopoutClick, this);
             label = this._getHeaderSetting('popout');
-            new HeaderButton(this, label, 'lm_popout', popout);
+            new HeaderButton(this, label, 'lm_popout', popout, this.layoutManager);
         }
 
         /**
@@ -284,7 +287,7 @@ export default class Header extends EventEmitter {
             maximise = fnBind(this.parent.toggleMaximise, this.parent);
             maximiseLabel = this._getHeaderSetting('maximise');
             minimiseLabel = this._getHeaderSetting('minimise');
-            maximiseButton = new HeaderButton(this, maximiseLabel, 'lm_maximise', maximise);
+            maximiseButton = new HeaderButton(this, maximiseLabel, 'lm_maximise', maximise, this.layoutManager);
 
             this.parent.on('maximised', function() {
                 maximiseButton.element.attr('title', minimiseLabel);
@@ -301,7 +304,7 @@ export default class Header extends EventEmitter {
         if (this._isClosable()) {
             closeStack = fnBind(this.parent.remove, this.parent);
             label = this._getHeaderSetting('close');
-            this.closeButton = new HeaderButton(this, label, 'lm_close', closeStack);
+            this.closeButton = new HeaderButton(this, label, 'lm_close', closeStack, this.layoutManager);
         }
     }
 
@@ -365,7 +368,9 @@ export default class Header extends EventEmitter {
         }
 
         //Show the menu based on function argument
-        this.tabDropdownButton.element.toggle(showTabMenu === true);
+        if(!this.layoutManager.config.settings.header.alwaysShowtabDropdownContainer) {
+          this.tabDropdownButton.element.toggle(showTabMenu === true);
+        }
 
         var size = function(val) {
             return val ? 'width' : 'height';

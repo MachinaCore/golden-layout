@@ -14,7 +14,10 @@ const defaultConfig = {
         responsiveMode: 'onload', // Can be onload, always, or none.
         tabOverlapAllowance: 0, // maximum pixel overlap per tab
         reorderOnTabMenuClick: true,
-        tabControlOffset: 10
+        tabControlOffset: 10,
+        header: {
+          alwaysShowtabDropdownContainer: true,
+        }
     },
     dimensions: {
         borderWidth: 5,
@@ -34,8 +37,10 @@ const defaultConfig = {
         tabDropdown: 'additional tabs'
     },
     templates: {
-      // stack: '<div class="lm_item lm_stack"></div>',
       header: '',
+      headerButton: '',
+      tab: '',
+      stack: '',
     }
 }
 
