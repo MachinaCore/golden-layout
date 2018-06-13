@@ -324,10 +324,12 @@ export default class Header extends EventEmitter {
 
             this.parent.on('maximised', function() {
                 maximiseButton.element.attr('title', minimiseLabel);
+                maximiseButton.element.html(minimiseLabel);
             });
 
             this.parent.on('minimised', function() {
                 maximiseButton.element.attr('title', maximiseLabel);
+                maximiseButton.element.html(maximiseLabel);
             });
         }
 
