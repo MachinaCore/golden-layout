@@ -12,12 +12,12 @@ import {
  * @param {AbstractContentItem} parent
  */
 const _template = [
-        '<div class="lm_header">',
-        '<ul class="lm_tabs"></ul>',
-        '<ul class="lm_controls"></ul>',
-        '<ul class="lm_tabdropdown_list"></ul>',
-        '</div>'
-    ].join('')
+    '<div class="lm_header">',
+    '<ul class="lm_tabs"></ul>',
+    '<ul class="lm_controls"></ul>',
+    '<ul class="lm_tabdropdown_list"></ul>',
+    '</div>'
+].join('')
 
 export default class Header extends EventEmitter {
 
@@ -25,12 +25,12 @@ export default class Header extends EventEmitter {
     constructor(layoutManager, parent) {
 
         super();
-        
+
         this.layoutManager = layoutManager;
         this.element = $(_template);
 
-        if(this.layoutManager.config.templates.header) {
-          this.element = $(this.layoutManager.config.templates.header);
+        if (this.layoutManager.config.templates.header) {
+            this.element = $(this.layoutManager.config.templates.header);
         }
 
         if (this.layoutManager.config.settings.selectionEnabled === true) {
@@ -51,13 +51,6 @@ export default class Header extends EventEmitter {
         this.activeContentItem = null;
         this.closeButton = null;
         this.dockButton = null;
-        // this.tabDropdownButton = null;
-
-        // if(!this.layoutManager.config.settings.header.alwaysShowtabDropdownContainer) {
-        //   this.tabDropdownContainer.hide();
-        //   this.hideAdditionalTabsDropdown = fnBind(this._hideAdditionalTabsDropdown, this);
-        //   $(document).mouseup(this.hideAdditionalTabsDropdown);
-        // }
 
         this._lastVisibleTabIndex = -1;
         this._tabControlOffset = this.layoutManager.config.settings.tabControlOffset;
@@ -121,6 +114,7 @@ export default class Header extends EventEmitter {
             if (this.tabs[i].contentItem === contentItem) {
                 this.tabs[i]._$destroy();
                 this.tabs.splice(i, 1);
+                this.layoutManager.emit('tabDestroyed', this.tabs[i]);
                 return;
             }
         }
@@ -129,6 +123,7 @@ export default class Header extends EventEmitter {
             if (this.tabsMarkedForRemoval[i].contentItem === contentItem) {
                 this.tabsMarkedForRemoval[i]._$destroy();
                 this.tabsMarkedForRemoval.splice(i, 1);
+                this.layoutManager.emit('tabDestroyed', this.tabsMarkedForRemoval[i]);
                 return;
             }
         }
@@ -145,7 +140,7 @@ export default class Header extends EventEmitter {
      *
      * @returns {void}
      */
-    hideTab(contentItem){
+    hideTab(contentItem) {
         for (var i = 0; i < this.tabs.length; i++) {
             if (this.tabs[i].contentItem === contentItem) {
                 this.tabs[i].element.hide()
@@ -153,7 +148,7 @@ export default class Header extends EventEmitter {
                 this.tabs.splice(i, 1);
                 return;
             }
-        }        
+        }
 
         throw new Error('contentItem is not controlled by this header');
     }
@@ -299,9 +294,6 @@ export default class Header extends EventEmitter {
         showTabDropdown = fnBind(this._showAdditionalTabsDropdown, this);
         tabDropdownLabel = this.layoutManager.config.labels.tabDropdown;
 
-        // this.tabDropdownButton = new HeaderButton(this, tabDropdownLabel, 'lm_tabdropdown', showTabDropdown, this.layoutManager);
-        // this.tabDropdownButton.element.hide();
-
         if (this.parent._header && this.parent._header.dock) {
             var button = fnBind(this.parent.dock, this.parent);
             label = this._getHeaderSetting('dock');
@@ -326,12 +318,12 @@ export default class Header extends EventEmitter {
             minimiseLabel = this._getHeaderSetting('minimise');
             maximiseButton = new HeaderButton(this, maximiseLabel, 'lm_maximise', maximise, this.layoutManager);
 
-            this.parent.on('maximised', function() {
+            this.parent.on('maximised', function () {
                 maximiseButton.element.attr('title', minimiseLabel);
                 maximiseButton.element.html(minimiseLabel);
             });
 
-            this.parent.on('minimised', function() {
+            this.parent.on('minimised', function () {
                 maximiseButton.element.attr('title', maximiseLabel);
                 maximiseButton.element.html(maximiseLabel);
             });
@@ -402,20 +394,15 @@ export default class Header extends EventEmitter {
      * @returns {void}
      */
     _updateTabSizes(showTabMenu) {
+
         if (this.tabs.length === 0) {
             return;
         }
 
-        //Show the menu based on function argument
-        // if(!this.layoutManager.config.settings.header.alwaysShowtabDropdownContainer) {
-            // this.tabDropdownButton.element.toggle(showTabMenu === true);
-        //   }
-
         /** custom addition to show material menu button */
         this.materialMenuButton.toggle(showTabMenu === true);
-        
 
-        var size = function(val) {
+        var size = function (val) {
             return val ? 'width' : 'height';
         };
         this.element.css(size(!this.parent._sided), '');

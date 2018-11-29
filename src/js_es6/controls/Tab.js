@@ -181,6 +181,7 @@ export default class Tab {
         if (!this.header._canDestroy)
             return;
         this.header.parent.removeChild(this.contentItem);
+		this.header._updateTabSizes();
     }
 
     /**
