@@ -38,6 +38,9 @@ export default class Header extends EventEmitter {
             this.element.on('click touchstart', fnBind(this._onHeaderClick, this));
         }
 
+        this.materialMenuButton = this.element.find('.button-wrapper');
+        this.materialMenuButton.hide();
+
         this.tabsContainer = this.element.find('.lm_tabs');
         this.tabDropdownContainer = this.element.find('.lm_tabdropdown_list');
         this.controlsContainer = this.element.find('.lm_controls');
@@ -48,12 +51,13 @@ export default class Header extends EventEmitter {
         this.activeContentItem = null;
         this.closeButton = null;
         this.dockButton = null;
-        this.tabDropdownButton = null;
-        if(!this.layoutManager.config.settings.header.alwaysShowtabDropdownContainer) {
-          this.tabDropdownContainer.hide();
-          this.hideAdditionalTabsDropdown = fnBind(this._hideAdditionalTabsDropdown, this);
-          $(document).mouseup(this.hideAdditionalTabsDropdown);
-        }
+        // this.tabDropdownButton = null;
+
+        // if(!this.layoutManager.config.settings.header.alwaysShowtabDropdownContainer) {
+        //   this.tabDropdownContainer.hide();
+        //   this.hideAdditionalTabsDropdown = fnBind(this._hideAdditionalTabsDropdown, this);
+        //   $(document).mouseup(this.hideAdditionalTabsDropdown);
+        // }
 
         this._lastVisibleTabIndex = -1;
         this._tabControlOffset = this.layoutManager.config.settings.tabControlOffset;
@@ -295,8 +299,8 @@ export default class Header extends EventEmitter {
         showTabDropdown = fnBind(this._showAdditionalTabsDropdown, this);
         tabDropdownLabel = this.layoutManager.config.labels.tabDropdown;
 
-        this.tabDropdownButton = new HeaderButton(this, tabDropdownLabel, 'lm_tabdropdown', showTabDropdown, this.layoutManager);
-        this.tabDropdownButton.element.hide();
+        // this.tabDropdownButton = new HeaderButton(this, tabDropdownLabel, 'lm_tabdropdown', showTabDropdown, this.layoutManager);
+        // this.tabDropdownButton.element.hide();
 
         if (this.parent._header && this.parent._header.dock) {
             var button = fnBind(this.parent.dock, this.parent);
@@ -403,9 +407,13 @@ export default class Header extends EventEmitter {
         }
 
         //Show the menu based on function argument
-        if(!this.layoutManager.config.settings.header.alwaysShowtabDropdownContainer) {
-          this.tabDropdownButton.element.toggle(showTabMenu === true);
-        }
+        // if(!this.layoutManager.config.settings.header.alwaysShowtabDropdownContainer) {
+            // this.tabDropdownButton.element.toggle(showTabMenu === true);
+        //   }
+
+        /** custom addition to show material menu button */
+        this.materialMenuButton.toggle(showTabMenu === true);
+        
 
         var size = function(val) {
             return val ? 'width' : 'height';
