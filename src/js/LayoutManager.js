@@ -497,7 +497,9 @@ lm.utils.copy( lm.LayoutManager.prototype, {
 	 * @param   {jQuery DOM element} element
 	 * @param   {Object|Function} itemConfig for the new item to be created, or a function which will provide it
 	 *
-	 * @returns {void}
+	 * @returns {DragSource}  an opaque object that identifies the DOM element
+	 *          and the attached itemConfig. This can be used in
+	 *          removeDragSource() later to get rid of the drag listeners.
 	 */
 	createDragSource: function( element, itemConfig ) {
 		this.config.settings.constrainDragToContainer = false;
@@ -505,6 +507,19 @@ lm.utils.copy( lm.LayoutManager.prototype, {
 		this._dragSources.push( dragSource );
 
 		return dragSource;
+	},
+
+	/**
+	 * Removes a DragListener added by createDragSource() so the corresponding
+	 * DOM element is not a drag source any more.
+	 *
+	 * @param   {jQuery DOM element} element
+	 *
+	 * @returns {void}
+	 */
+	removeDragSource: function( dragSource ) {
+		dragSource.destroy();
+		lm.utils.removeFromArray( dragSource, this._dragSources );
 	},
 
 	/**
@@ -549,6 +564,7 @@ lm.utils.copy( lm.LayoutManager.prototype, {
 			this._$minimiseItem( this._maximisedItem );
 		}
 		this._maximisedItem = contentItem;
+		contentItem.on( 'beforeItemDestroyed', this._$cleanupBeforeMaximisedItemDestroyed, this );
 		this._maximisedItem.addId( '__glMaximised' );
 		contentItem.element.addClass( 'lm_maximised' );
 		contentItem.element.after( this._maximisePlaceholder );
@@ -567,8 +583,16 @@ lm.utils.copy( lm.LayoutManager.prototype, {
 		this._maximisePlaceholder.remove();
 		contentItem.parent.callDownwards( 'setSize' );
 		this._maximisedItem = null;
+		contentItem.off( 'beforeItemDestroyed', this._$cleanupBeforeMaximisedItemDestroyed, this );
 		contentItem.emit( 'minimised' );
 		this.emit( 'stateChanged' );
+	},
+
+	_$cleanupBeforeMaximisedItemDestroyed: function( contentItem ) {
+		if (this._maximisedItem === event.origin) {
+			this._maximisedItem.off( 'beforeItemDestroyed', this._$cleanupBeforeMaximisedItemDestroyed, this );
+			this._maximisedItem = null;
+		}
 	},
 
 	/**
@@ -614,14 +638,15 @@ lm.utils.copy( lm.LayoutManager.prototype, {
 
 	_$createRootItemAreas: function() {
 		var areaSize = 50;
-		var sides = { y2: 0, x2: 0, y1: 'y2', x1: 'x2' };
+		var sides = { y2: 'y1', x2: 'x1', y1: 'y2', x1: 'x2' };
 		for( var side in sides ) {
 			var area = this.root._$getArea();
 			area.side = side;
-			if( sides [ side ] )
+			if( sides [ side ][1] == '2' )
 				area[ side ] = area[ sides [ side ] ] - areaSize;
-			else
-				area[ side ] = areaSize;
+			else {
+				area[ side ] = area[ sides [ side ] ] + areaSize;
+			}
 			area.surface = ( area.x2 - area.x1 ) * ( area.y2 - area.y1 );
 			this._itemAreas.push( area );
 		}

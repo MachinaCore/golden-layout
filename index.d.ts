@@ -107,7 +107,7 @@ declare module 'golden-layout' {
          * @param itemConfiguration An item configuration (can be an entire tree of items)
          * @param parent A parent item
          */
-        createContentItem(itemConfiguration?: GoldenLayout.ItemConfigType, parent?: GoldenLayout.ContentItem): void;
+        createContentItem(itemConfiguration?: GoldenLayout.ItemConfigType, parent?: GoldenLayout.ContentItem): GoldenLayout.ContentItem;
 
         /**
          * Creates a new popout window with configOrContentItem as contents at the position specified in dimensions
@@ -134,8 +134,17 @@ declare module 'golden-layout' {
          * where it turns into a contentItem.
          * @param element The DOM element that will be turned into a dragSource
          * @param itemConfiguration An item configuration (can be an entire tree of items)
+         * @return the dragSource that was created. This can be used to remove the
+         *         dragSource from the layout later.
          */
-        createDragSource(element: HTMLElement | JQuery, itemConfiguration: GoldenLayout.ItemConfigType): void;
+        createDragSource(element: HTMLElement | JQuery, itemConfiguration: GoldenLayout.ItemConfigType): GoldenLayout.DragSource;
+
+        /**
+         * Removes a dragSource from the layout.
+         *
+         * @param dragSource The dragSource to remove
+         */
+        removeDragSource(dragSource: GoldenLayout.DragSource): void;
 
         /**
          * If settings.selectionEnabled is set to true, this allows to select items programmatically.
@@ -417,6 +426,7 @@ declare module 'golden-layout' {
              */
             contentItems: ContentItem[];
 
+            container: Container;
             /**
              * The item that is this item's parent (or null if the item is root)
              */
@@ -490,7 +500,7 @@ declare module 'golden-layout' {
              * @param contentItem The contentItem that should be removed
              * @param keepChild If true the item won't be destroyed. (Use cautiosly, if the item isn't destroyed it's up to you to destroy it later). Default: false.
              */
-            removeChild(contentItem: Config, keepChild?: boolean): void;
+            removeChild(contentItem: ContentItem, keepChild?: boolean): void;
 
             /**
              * The contentItem that should be removed
@@ -694,6 +704,9 @@ declare module 'golden-layout' {
              * Closes the container or returns false if that is not possible
              */
             close(): boolean;
+        }
+
+        export interface DragSource {
         }
 
         export interface BrowserWindow {
